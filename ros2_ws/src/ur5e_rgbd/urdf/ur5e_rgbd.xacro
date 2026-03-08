@@ -23,7 +23,7 @@
   <joint name="realsense_mount_joint" type="fixed">
     <parent link="wrist_3_link"/>
     <child link="realsense_mount"/>
-    <origin xyz="0 0.02 0.02" rpy="0 0.2 0"/>
+    <origin xyz="0.08 0.0 -0.02" rpy="0 -1.86 0"/>
   </joint>
 
   <!-- camera -->
