@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  ros2-manipulator-gazebo:
+    build: .
+    container_name: ros2_manipulator_sim
+
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - XAUTHORITY=/tmp/.docker.xauth
+
+    volumes:
+      - ../ros2_ws:/manipulator_simulator
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ~/.Xauthority:/root/.Xauthority
+
+    network_mode: host
+    privileged: true
+
+    stdin_open: true
+    tty: true
