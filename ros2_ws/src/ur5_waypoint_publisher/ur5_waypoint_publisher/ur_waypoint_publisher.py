@@ -32,7 +32,7 @@ class URWaypointPublisher(Node):
 
         point = JointTrajectoryPoint()
 
-        point.positions = [0.0, -1.2, 1.3, -1.5, -1.57, 0.0]
+        point.positions = [0.0, 0.16, -0.2, -1.2, -1.0, -1.0]
 
         point.time_from_start.sec = 3
 
