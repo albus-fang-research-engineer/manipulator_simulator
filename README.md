@@ -1,5 +1,5 @@
 `ros2 launch ur_simulation_gz ur_sim_control.launch.py ur_type:=ur5e`
-
+`ros2 launch ur_simulation_gz ur_sim_control.launch.py   ur_type:=ur5e   description_file:=/manipulator_simulator/src/ur5e_rgbd/urdf/ur5e_rgbd.xacro`
 ### Quick terminal waypoint publisher
 ```
 ros2 topic pub /joint_trajectory_controller/joint_trajectory trajectory_msgs/msg/JointTrajectory "
@@ -15,3 +15,4 @@ points:
   time_from_start: {sec: 2}
 "
 ```
+
