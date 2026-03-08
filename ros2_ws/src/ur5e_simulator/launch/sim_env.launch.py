@@ -53,10 +53,15 @@ def generate_launch_description():
         ],
         output="screen",
     )
-
+    image_view = Node(
+        package="rqt_image_view",
+        executable="rqt_image_view",
+        output="screen",
+    )
     # -------------------------------------------------
 
     return LaunchDescription([
         ur_sim,
-        camera_bridge
+        camera_bridge,
+        image_view
     ])

@@ -1,6 +1,14 @@
 `ros2 launch ur_simulation_gz ur_sim_control.launch.py ur_type:=ur5e`
 `ros2 launch ur_simulation_gz ur_sim_control.launch.py   ur_type:=ur5e   description_file:=/manipulator_simulator/src/ur5e_rgbd/urdf/ur5e_rgbd.xacro`
 `ros2 launch ur5e_simulator sim_env.launch.py `
+
+# Start Simulation
+```
+ros2 launch ur5e_simulator sim_env.launch.py 
+ros2 run ur5_waypoint_publisher ur5e_waypoint_publisher 
+ros2 run rqt_image_view rqt_image_view 
+```
+
 ### Quick terminal waypoint publisher
 ```
 ros2 topic pub /joint_trajectory_controller/joint_trajectory trajectory_msgs/msg/JointTrajectory "
