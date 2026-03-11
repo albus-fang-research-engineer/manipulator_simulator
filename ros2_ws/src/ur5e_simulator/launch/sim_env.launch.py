@@ -60,8 +60,14 @@ def generate_launch_description():
     )
     # -------------------------------------------------
 
+    trajectory_visualizer = Node(
+        package="trajectory_visualizer",
+        executable="trajectory_visualizer",
+        output="screen",
+    )
     return LaunchDescription([
         ur_sim,
         camera_bridge,
-        image_view
+        image_view,
+        trajectory_visualizer
     ])
