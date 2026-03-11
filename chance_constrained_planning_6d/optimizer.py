@@ -212,19 +212,19 @@ def solve_step_ur5e(q0, x_goal, obstacle_points, model, device, fk_fn, jacobian_
     }
 
     # Optional debugging plot
-    if folder:
-        plot_chance_debug_jointspace(
-            q0=q0,
-            q_next=q_next,
-            x_curr=x_curr,
-            x_goal=x_goal,
-            mu=mu,
-            sigma=sigma,
-            grad=grad,
-            folder=folder,
-            epoch=epoch,
-            step_id=step_id,
-        )
+    # if folder:
+    #     plot_chance_debug_jointspace(
+    #         q0=q0,
+    #         q_next=q_next,
+    #         x_curr=x_curr,
+    #         x_goal=x_goal,
+    #         mu=mu,
+    #         sigma=sigma,
+    #         grad=grad,
+    #         folder=folder,
+    #         epoch=epoch,
+    #         step_id=step_id,
+    #     )
 
     return q_next, res, debug
 
