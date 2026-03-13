@@ -48,13 +48,19 @@ RUN apt update && apt install -y \
     ros-humble-ur-simulation-gz
 
 RUN apt update && apt install ros-humble-realsense2-description -y
+
+RUN apt-get update && apt-get install -y \
+    ros-humble-octomap \
+    ros-humble-octomap-mapping \
+    ros-humble-octomap-server \
+    && rm -rf /var/lib/apt/lists/*
 # -----------------------------
 # Initialize rosdep
 # -----------------------------
 RUN rosdep init || true
 RUN rosdep update
 
-
+RUN pip install pin
 
 # -----------------------------
 # Setup bash
