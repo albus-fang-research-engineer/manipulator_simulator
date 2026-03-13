@@ -28,6 +28,7 @@
     </light>
     <!-- Sun -->
 
+
     <!-- Ground -->
     <model name="ground_plane">
       <static>true</static>
@@ -55,11 +56,6 @@
       </link>
     </model>
 
-    <include>
-      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/bookshelf</uri>
-      <pose>-1.1 0 0 0 0 1.57</pose>
-    </include>
-    
     <!-- Desk -->
     <model name="desk">
       <static>true</static>
