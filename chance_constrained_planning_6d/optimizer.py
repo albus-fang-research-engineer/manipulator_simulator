@@ -4,13 +4,50 @@ import torch
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
 from scipy.stats import norm
-
 from load_njsdf.inference import mu_sigma_grad_nn, BETA
+import pinocchio as pin
 
+URDF_PATH = "/manipulator_simulator/src/ur5e_rgbd/urdf/ur5e_rgbd.urdf"
+pin_model = pin.buildModelFromUrdf(URDF_PATH)
+pin_data = pin_model.createData()
+
+EE_FRAME = pin_model.getFrameId("tool0")
 
 debug_step_counter = 0
 last_debug_epoch = -1
 
+def fk_ur5e(q):
+    """
+    Returns 6D pose [x,y,z,rx,ry,rz] of tool0
+    """
+    pin.forwardKinematics(pin_model, pin_data, q)
+    pin.updateFramePlacements(pin_model, pin_data)
+
+    pose = pin_data.oMf[EE_FRAME]
+
+    x = pose.translation
+
+    R = pose.rotation
+    rpy = pin.rpy.matrixToRpy(R)
+
+    return np.concatenate([x, rpy])
+
+def jacobian_ur5e(q):
+    """
+    Returns 6x6 geometric Jacobian of tool0
+    """
+    pin.forwardKinematics(pin_model, pin_data, q)
+    pin.updateFramePlacements(pin_model, pin_data)
+
+    J = pin.computeFrameJacobian(
+        pin_model,
+        pin_data,
+        q,
+        EE_FRAME,
+        pin.ReferenceFrame.LOCAL_WORLD_ALIGNED
+    )
+
+    return J
 
 def wrap_angle_diff(a, b):
     """
@@ -32,30 +69,26 @@ def pose_error_6d(x_curr, x_goal):
     return np.concatenate([pos_err, rot_err])
 
 
-def solve_step_ur5e(q0, x_goal, obstacle_points, model, device, fk_fn, jacobian_fn, epoch, folder="", safety_margin=0.0, verbose=True):
+def solve_step_ur5e(q0, q_goal, obstacle_points, model, device, epoch, folder="", safety_margin=0.0, verbose=True):
     """
     Solve one 6D local chance-constrained step for UR5e.
 
     Parameters
     ----------
     q0 : (6,)
-        Current joint configuration.
-    x_goal : (6,)
-        Desired next end-effector pose [x, y, z, rx, ry, rz].
+        Current waypoint in joint configuration.
+    q_goal : (6,)
+        Next waypoint in joint configuration
     obstacle_points : array-like
         Obstacle point cloud or active obstacle set.
     model, device :
         Passed into mu_sigma_grad_nn.
-    fk_fn : callable
-        fk_fn(q) -> (6,) task-space pose vector.
-    jacobian_fn : callable
-        jacobian_fn(q) -> (6,6) Jacobian.
     q_min, q_max : (6,)
         Joint limits.
     epoch : int
         For debug plots / naming.
     folder : str
-        Output folder.
+        Plot output folder.
     Q, D : (6,6)
         Weight matrices for dq and slack.
     safety_margin : float
@@ -87,11 +120,11 @@ def solve_step_ur5e(q0, x_goal, obstacle_points, model, device, fk_fn, jacobian_
     # -----------------------------
     if torch.is_tensor(q0):
         q0 = q0.detach().cpu().numpy()
-    if torch.is_tensor(x_goal):
-        x_goal = x_goal.detach().cpu().numpy()
+    if torch.is_tensor(q_goal):
+        q_goal = q_goal.detach().cpu().numpy()
 
     q0 = np.asarray(q0, dtype=np.float64).reshape(6)
-    x_goal = np.asarray(x_goal, dtype=np.float64).reshape(6)
+    q_goal = np.asarray(q_goal, dtype=np.float64).reshape(6)
 
     
     Q = np.diag([1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
@@ -100,9 +133,14 @@ def solve_step_ur5e(q0, x_goal, obstacle_points, model, device, fk_fn, jacobian_
     # -----------------------------
     # Current FK + Jacobian
     # -----------------------------
-    x_curr = np.asarray(fk_fn(q0), dtype=np.float64).reshape(6)
-    J = np.asarray(jacobian_fn(q0), dtype=np.float64).reshape(6, 6)
-
+    # x_curr = np.asarray(fk_fn(q0), dtype=np.float64).reshape(6)
+    # J = np.asarray(jacobian_fn(q0), dtype=np.float64).reshape(6, 6)
+    # -----------------------------
+    # Current FK + Jacobian (Pinocchio)
+    # -----------------------------
+    x_curr = fk_ur5e(q0)
+    x_goal = fk_ur5e(q_goal)
+    J = jacobian_ur5e(q0)
     # -----------------------------
     # Stochastic distance model
     # Assumes grad is wrt q (6D)
@@ -226,7 +264,7 @@ def solve_step_ur5e(q0, x_goal, obstacle_points, model, device, fk_fn, jacobian_
     #         step_id=step_id,
     #     )
 
-    return q_next, res, debug
+    return q_next#, res, debug
 
 
 def plot_chance_debug_jointspace(q0, q_next, x_curr, x_goal, mu, sigma, grad, folder, epoch, step_id):
