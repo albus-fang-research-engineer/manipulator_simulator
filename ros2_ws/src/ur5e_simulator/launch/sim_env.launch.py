@@ -80,7 +80,8 @@ def generate_launch_description():
             # "frame_id": "world"
         }],
         remappings=[
-            ("cloud_in", "/world/camera_world/model/ur/link/wrist_3_link/sensor/rgbd_camera/points")
+            # ("cloud_in", "/world/camera_world/model/ur/link/wrist_3_link/sensor/rgbd_camera/points")
+            ("cloud_in", "camera/depth_image")
         ],
     )
     return LaunchDescription([
