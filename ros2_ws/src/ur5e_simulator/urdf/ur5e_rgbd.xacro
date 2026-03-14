@@ -27,12 +27,11 @@
   </joint>
 
   <!-- camera -->
-  <xacro:sensor_d435 parent="realsense_mount" name="camera">
+  <xacro:sensor_d435 parent="realsense_mount" name="camera" use_nominal_extrinsics="true">
     <origin xyz="0 0 0" rpy="0 0 0"/>
   </xacro:sensor_d435>
     <!-- Gazebo RGBD sensor -->
   <gazebo reference="realsense_mount">
-    <disableFixedJointLumping>true</disableFixedJointLumping>
     <sensor name="rgbd_camera" type="rgbd_camera">
       <update_rate>30</update_rate>
 
