@@ -54,6 +54,9 @@ RUN apt-get update && apt-get install -y \
     ros-humble-octomap-mapping \
     ros-humble-octomap-server \
     && rm -rf /var/lib/apt/lists/*
+
+RUN apt update && apt install ros-humble-octomap-rviz-plugins -y
+
 # -----------------------------
 # Initialize rosdep
 # -----------------------------
@@ -66,6 +69,7 @@ RUN pip install pin
 # Setup bash
 # -----------------------------
 RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+RUN echo "export ROS_DOMAIN_ID=66" >> ~/.bashrc
 # RUN echo "source /ros2_ws/install/setup.bash" >> ~/.bashrc
 
 CMD ["bash"]

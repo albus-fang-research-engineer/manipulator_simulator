@@ -77,17 +77,25 @@ def generate_launch_description():
         output="screen",
         parameters=[{
             "resolution": 0.02,
-            # "frame_id": "world"
+            "frame_id": "base_link"
         }],
         remappings=[
             # ("cloud_in", "/world/camera_world/model/ur/link/wrist_3_link/sensor/rgbd_camera/points")
-            ("cloud_in", "camera/depth_image")
+            ("cloud_in", "camera/points")
         ],
     )
+    frame_fix_node = Node(
+        package="frame_fix_republisher",
+        executable="frame_fix_node",
+        name="frame_fix_node",
+        output="screen",
+    )
+
     return LaunchDescription([
         ur_sim,
         camera_bridge,
         image_view,
         trajectory_visualizer,
-        octomap_server
+        octomap_server,
+        frame_fix_node
     ])
