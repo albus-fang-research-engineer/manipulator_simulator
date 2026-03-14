@@ -65,9 +65,28 @@ def generate_launch_description():
         executable="trajectory_visualizer",
         output="screen",
     )
+
+    # -------------------------------------------------
+    # Octomap Server
+    # -------------------------------------------------
+
+    octomap_server = Node(
+        package="octomap_server",
+        executable="octomap_server_node",
+        name="octomap_server",
+        output="screen",
+        parameters=[{
+            "resolution": 0.02,
+            # "frame_id": "world"
+        }],
+        remappings=[
+            ("cloud_in", "/world/camera_world/model/ur/link/wrist_3_link/sensor/rgbd_camera/points")
+        ],
+    )
     return LaunchDescription([
         ur_sim,
         camera_bridge,
         image_view,
-        trajectory_visualizer
+        trajectory_visualizer,
+        octomap_server
     ])
