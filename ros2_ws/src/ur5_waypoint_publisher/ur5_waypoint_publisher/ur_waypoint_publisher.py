@@ -42,7 +42,14 @@ class URWaypointPublisher(Node):
         ])
 
         num_points = 20
-        step = -0.03
+        step = np.array([
+            0.03,  # shoulder_pan
+            -0.03,  # shoulder_lift
+            -0.03,  # elbow
+            -0.03,  # wrist_1
+            0.03,  # wrist_2
+            -0.03   # wrist_3
+        ])
         dt = 0.1
 
         for i in range(num_points):
