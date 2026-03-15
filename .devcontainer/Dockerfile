@@ -47,21 +47,21 @@ RUN apt update && apt install -y \
     ros-humble-ur-moveit-config \
     ros-humble-ur-simulation-gz
 
-RUN apt update && apt install ros-humble-realsense2-description -y
-
 RUN apt-get update && apt-get install -y \
+    ros-humble-realsense2-description \
     ros-humble-octomap \
     ros-humble-octomap-mapping \
     ros-humble-octomap-server \
+    ros-humble-octomap-rviz-plugins \
     && rm -rf /var/lib/apt/lists/*
 
-RUN apt update && apt install ros-humble-octomap-rviz-plugins -y
+
 
 # -----------------------------
 # Initialize rosdep
 # -----------------------------
-RUN rosdep init || true
-RUN rosdep update
+# RUN rosdep init || true
+# RUN rosdep update
 
 RUN pip install pin
 
