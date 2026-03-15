@@ -15,7 +15,7 @@ def rollout_optimized(start, path, obstacle_points, solver, model, device, epoch
     for wp in path:
         wp_np = _to_numpy(wp)
         nominal.append(wp_np.copy())
-        p, mu, sigma = solver(p, wp_np, obstacle_points, model, device, epoch, folder)
+        p, debug = solver(p, wp_np, obstacle_points, model, device, epoch, folder)
         p = _to_numpy(p).copy()
         traj.append(p.copy())
 

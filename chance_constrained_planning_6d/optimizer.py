@@ -264,7 +264,7 @@ def solve_step_ur5e(q0, q_goal, obstacle_points, model, device, epoch, folder=""
     #         step_id=step_id,
     #     )
 
-    return q_next#, res, debug
+    return q_next, debug#, res, debug
 
 
 def plot_chance_debug_jointspace(q0, q_next, x_curr, x_goal, mu, sigma, grad, folder, epoch, step_id):
