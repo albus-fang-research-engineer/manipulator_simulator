@@ -9,8 +9,8 @@ import torch
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
 # import your libraries
-from chance_solver import solve_step_ur5e
-from chance_solver import rollout_optimized
+from chance_constrained_planning_6d import solve_step_ur5e
+from chance_constrained_planning_6d import rollout_optimized
 
 # your FK + Jacobian
 from ur5e_kinematics import fk_ur5e, jacobian_ur5e
@@ -75,7 +75,7 @@ class ChanceConstrainedOptimizer(Node):
 
     def solver(self, q0, q_goal, obstacle_points, model, device, epoch, folder):
 
-        q_next, res, debug = solve_step_ur5e(
+        q_next, debug = solve_step_ur5e(
             q0=q0,
             x_goal=fk_ur5e(q_goal),
             obstacle_points=obstacle_points,
